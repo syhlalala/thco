@@ -1,0 +1,731 @@
+ADDSP3 R0 0x0000
+ADDSP3 R0 0x0000
+NOP
+
+;±£´æÓÃ»§³ÌÐò¼Ä´æÆ÷µÄµØÖ· 
+;0xBF10  0xBF11 BF12 0xBF13 BF14 0xBF15
+; R0    R1   R2   R3   R4   R5  
+
+B START
+NOP
+
+DELINT:   ;ÖÐ¶Ï´¦Àí³ÌÐò
+	NOP
+	NOP
+	NOP
+	;±£´æÓÃ»§³ÌÐòÏÖ³¡
+	LI R6 0xBF
+	SLL R6 R6 0x0000
+	ADDIU R6 0x10					;R6=0xBF10
+	SW R6 R0 0x0000
+	SW R6 R1 0x0001
+	SW R6 R2 0x0002
+	
+
+	
+
+	
+	;R1=ÖÐ¶ÏºÅ
+	LW_SP R1 0x0000
+	ADDSP 0x0001
+	LI R0 0x00FF
+	AND R1 R0
+	
+	;R2=Ó¦ÓÃ³ÌÐòµÄpc
+	LW_SP R2 0x0000
+	ADDSP 0x0001
+	
+	;±£´ær3
+	ADDSP 0xFFFF
+	SW_SP R3 0x0000
+
+
+	
+	;±£´æÓÃ»§³ÌÐò·µ»ØµØÖ·
+	ADDSP 0xFFFF
+	SW_SP R7 0x0000
+	
+	;ÌáÊ¾ÖÕ¶Ë£¬½øÈëÖÐ¶Ï´¦Àí
+	LI R3 0x000F
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW 	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00
+	SW R6 R3 0x0000
+	NOP
+	;Êä³öÖÐ¶ÏºÅ
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW 	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00 
+	SW R6 R1 0x0000
+	NOP
+	
+	;ÌáÊ¾ÖÕ¶Ë£¬ÖÐ¶Ï´¦Àí½áÊø
+	LI R3 0x000F
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW 	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00 
+	SW R6 R3 0x0000
+	NOP
+	
+	;R6±£´æ·µ»ØµØÖ·
+	ADDIU3 R2 R6 0x0000
+	
+	;ÓÃr3=IH£¨¸ßÎ»±ä³É1£©
+	MFIH R3
+	LI R0 0x0080
+	SLL R0 R0 0x000
+	OR R3 R0
+	
+	;»Ö¸´ÏÖ³¡
+	LI R7 0xBF
+	SLL R7 R7 0x0000
+	ADDIU R7 0x10					;R7=0xBF10
+	LW R7 R0 0x0000
+	LW R7 R1 0x0001
+	LW R7 R2 0x0002
+	
+	;r7=ÓÃ»§³ÌÐò·µ»ØµØÖ·
+	LW_SP R7 0x0000
+	
+	ADDSP 0x0001
+	ADDSP 0x0001
+	NOP
+	MTIH R3;
+	JR R6
+	LW_SP R3 0x00FF
+	
+	NOP	
+
+
+;init  0x8251
+START:
+	;³õÊ¼»¯IH¼Ä´æÆ÷£¬×î¸ßÎ»Îª1Ê±£¬ÔÊÐíÖÐ¶Ï£¬Îª0Ê±²»ÔÊÐí¡£³õÊ¼»¯Îª0£¬kernel²»ÔÊÐíÖÐ¶Ï
+	LI R0 0x07
+	MTIH R0
+	;³õÊ¼»¯Õ»µØÖ·
+	LI R0 0x00BF 
+	SLL R0 R0 0x0000
+	ADDIU R0 0x10					;R0=0xBF10 
+	MTSP R0
+	NOP
+
+	INT 0x00
+	DEAD:
+	B DEAD
+	NOP
+	
+	;ÓÃ»§¼Ä´æÆ÷Öµ³õÊ¼»¯
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000
+	ADDIU R6 0x10					;R6=0xBF10 
+	LI R0 0x0000
+	SW R6 R0 0x0000
+	SW R6 R0 0x0001
+	SW R6 R0 0x0002
+	SW R6 R0 0x0003
+	SW R6 R0 0x0004
+	SW R6 R0 0x0005
+		
+	;WELCOME
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW 	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LI R0 0x004F
+	SW R6 R0 0x0000
+	NOP
+	
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW 	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LI R0 0x004B
+	SW R6 R0 0x0000
+	NOP
+	
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW
+	NOP 	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LI R0 0x000A
+	SW R6 R0 0x0000
+	NOP
+	
+	MFPC R7 
+	ADDIU R7 0x0003  
+	NOP
+	B TESTW 	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LI R0 0x000D
+	SW R6 R0 0x0000
+	NOP
+	
+
+	
+
+	
+
+	
+BEGIN:          ;¼ì²âÃüÁî
+	;½ÓÊÕ×Ö·û£¬±£´æµ½r1
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R1 0x0000
+	LI R6 0x00ff 
+  AND R1 R6 
+	NOP	
+	
+
+	;¼ì²âÊÇ·ñÎªRÃüÁî		
+	LI R0 0x0052
+	CMP R0 R1
+	BTEQZ SHOWREGS	
+	NOP	
+	;¼ì²âÊÇ·ñÎªDÃüÁî
+	LI R0 0x0044
+	CMP R0 R1
+	BTEQZ SHOWMEM
+	NOP	
+	
+	;¼ì²âÊÇ·ñÎªAÃüÁî
+	LI R0 0x0041
+	CMP R0 R1
+	BTEQZ GOTOASM
+	NOP	
+	
+	;¼ì²âÊÇ·ñÎªUÃüÁî
+	LI R0 0x0055
+	CMP R0 R1
+	BTEQZ GOTOUASM
+	NOP	
+	;¼ì²âÊÇ·ñÎªGÃüÁî
+	LI R0 0x0047
+	CMP R0 R1
+	BTEQZ GOTOCOMPILE
+	NOP		
+	
+	B BEGIN
+	NOP
+
+;¸÷´¦Àí¿éµÄÈë¿Ú
+GOTOUASM:
+	NOP
+	B UASM
+	NOP
+GOTOASM:
+	NOP
+	B ASM
+	NOP
+	
+GOTOCOMPILE:
+	NOP
+	B COMPILE
+	NOP
+  
+	
+;²âÊÔ8251ÊÇ·ñÄÜÐ´
+TESTW:	
+	NOP	 		
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	ADDIU R6 0x0001 
+	LW R6 R0 0x0000 
+	LI R6 0x0001 
+	AND R0 R6 
+	BEQZ R0 TESTW     ;BF01&1=0 ÔòµÈ´ý	
+	NOP		
+	JR R7
+	NOP 
+	
+
+	
+;²âÊÔ8251ÊÇ·ñÄÜ¶Á
+TESTR:	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	ADDIU R6 0x0001 
+	LW R6 R0 0x0000 
+	LI R6 0x0002
+	AND R0 R6 
+	BEQZ R0 TESTR   ;BF01&2=0  ÔòµÈ´ý	
+	NOP	
+	JR R7
+	NOP 		
+	
+	
+SHOWREGS:    ;RÃüÁî£¬´òÓ¡R0-R5
+	LI R1 0x0006  ;R1µÝ¼õ  
+	LI R2 0x0006   ;R2²»±ä
+	
+LOOP:
+	LI R0  0x00BF
+	SLL R0 R0 0x0000
+	ADDIU R0 0x0010
+	SUBU R2 R1 R3   ;R2=0,1,2,3
+	ADDU R0 R3 R0   ;R0=BF10...
+	LW R0 R3 0x0000    ;R3=ÓÃ»§³ÌÐòµÄ R0,R1,R2	
+
+	;·¢ËÍµÍ°ËÎ»
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=BF00	
+	SW R6 R3 0x0000	
+	;·¢ËÍ¸ß°ËÎ»
+	SRA R3 R3 0x0000
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00	
+	SW R6 R3 0x0000	
+	
+	ADDIU R1 0xFFFF
+	NOP
+	NOP
+	NOP
+	NOP
+	BNEZ R1 LOOP
+	NOP	
+	B BEGIN
+	NOP
+	
+
+	
+	
+
+	
+	
+	
+SHOWMEM:  ;²é¿´ÄÚ´æ	
+;D¶ÁÈ¡µØÖ·µÍÎ»µ½r5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000	
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	
+	;¶ÁÈ¡µØÖ·¸ßÎ»µ½r1
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R1 0x0000
+	LI R6 0x00FF
+	AND R1 R6
+	NOP	
+	
+	
+	
+	;R1´æ´¢µØÖ·
+	SLL R1 R1 0x0000
+	OR R1 R5
+	
+	;¶ÁÈ¡ÏÔÊ¾´ÎÊýµÍÎ»µ½R5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	;¶ÁÈ¡ÏÔÊ¾´ÎÊý¸ßÎ»µ½R2
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R2 0x0000
+	LI R6 0x00FF
+	AND R2 R6
+	NOP	
+	;R2±£´æÄÚ´æ¸öÊý
+	SLL R2 R2 0x0000
+	OR R2 R5
+
+	
+		;Ñ­»··¢³ö	
+	
+MEMLOOP:		
+	
+	LW R1 R3 0x0000    ;R3ÎªÄÚ´æÊý¾Ý	
+
+	;·¢ËÍµÍ°ËÎ»
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00	
+	SW R6 R3 0x0000	
+	;·¢ËÍ¸ß°ËÎ»
+
+	SRA R3 R3 0x0000
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00	
+	SW R6 R3 0x0000	
+	
+	ADDIU R1 0x0001   ;R1=µØÖ·¼Ó¼Ó¼Ó
+	ADDIU R2 0xFFFF
+	NOP
+	BNEZ R2 MEMLOOP
+	NOP	
+
+	B BEGIN
+	NOP		
+
+
+ ;»ã±à	
+ASM:  
+	;AÃüÁî¶ÁÈ¡µØÖ·µÍÎ»µ½r5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	;¶ÁÈ¡µØÖ·¸ßÎ»µ½r1
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R1 0x0000
+	LI R6 0x00FF
+	AND R1 R6
+	NOP	
+	
+	;R1´æ´¢µØÖ·
+	SLL R1 R1 0x0000
+	OR R1 R5
+	
+	
+	
+	
+	;¼ì²âµØÖ·ÊÇ·ñºÏ·¨
+	LI R0 0x0000
+	CMP R0 R1      
+  BTEQZ GOTOBEGIN
+	NOP	
+	
+ 
+	;¶ÁÈ¡Êý¾ÝµÍÎ»µ½R5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	
+
+	;¶ÁÈ¡Êý¾Ý¸ßÎ»µ½R2
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R2 0x0000
+	LI R6 0x00FF
+	AND R2 R6
+	NOP	
+	;R2±£´æÊý¾Ý
+	SLL R2 R2 0x0000
+	OR R2 R5
+			
+	SW R1 R2 0x0000	
+	NOP
+	
+	B ASM
+	NOP
+	
+GOTOBEGIN:
+	NOP
+	B BEGIN
+	NOP
+	
+	
+	
+	
+;·´»ã±à£º½«ÐèÒª·´»ã±àµÄµØÖ·´¦µÄÖµ·¢¸øÖÕ¶Ë´¦Àí	
+UASM:
+;¶ÁÈ¡µØÖ·µÍÎ»µ½r5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	;¶ÁÈ¡µØÖ·¸ßÎ»µ½r1
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R1 0x0000
+	LI R6 0x00FF
+	AND R1 R6
+	NOP	
+	
+	
+	
+	;R1´æ´¢µØÖ·
+	SLL R1 R1 0x0000
+	OR R1 R5
+	
+	;¶ÁÈ¡ÏÔÊ¾´ÎÊýµÍÎ»µ½R5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	;¶ÁÈ¡ÏÔÊ¾´ÎÊý¸ßÎ»µ½R2
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R2 0x0000
+	LI R6 0x00FF
+	AND R2 R6
+	NOP	
+	;R2±£´æÄÚ´æ¸öÊý
+	SLL R2 R2 0x0000
+	OR R2 R5
+
+	
+		;Ñ­»··¢³ö	
+	
+UASMLOOP:		
+	
+	LW R1 R3 0x0000    ;R3ÎªÄÚ´æÊý¾Ý	
+
+	;·¢ËÍµÍ°ËÎ»
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00	
+	SW R6 R3 0x0000	
+	;·¢ËÍ¸ß°ËÎ»
+
+	SRA R3 R3 0x0000
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00	
+	SW R6 R3 0x0000	
+	
+	ADDIU R1 0x0001   ;R1=µØÖ·¼Ó¼Ó¼Ó
+	ADDIU R2 0xFFFF
+	NOP
+	BNEZ R2 UASMLOOP
+	NOP	
+
+	B BEGIN
+	NOP			
+	
+;Á¬ÐøÖ´ÐÐ
+COMPILE:
+	;¶ÁÈ¡µØÖ·µÍÎ»µ½R5
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R5 0x0000
+	LI R6 0x00FF
+	AND R5 R6
+	NOP	
+	;¶ÁÈ¡ÄÚ´æ¸ßÎ»µ½R2
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP	
+	B TESTR	
+	NOP
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 
+	LW R6 R2 0x0000
+	LI R6 0x00FF
+	AND R2 R6
+	NOP	
+	;R2±£´æÄÚ´æµØÖ·  ´«¸ør6
+	SLL R2 R2 0x0000
+	OR R2 R5
+	ADDIU3 R2 R6 0x0000
+	
+	
+	LI R7 0x00BF
+	SLL R7 R7 0x0000
+	ADDIU R7 0x0010
+	
+	LW R7 R5 0x0005
+	ADDSP 0xFFFF
+	SW_SP R5 0x0000
+	
+	
+	;ÖÐ¶Ï±£´æÔÚR5ÖÐ
+	MFIH R5
+	LI R1 0x0080
+	SLL R1 R1 0x000
+	OR R5 R1
+	
+	
+	
+	;»Ö¸´ÏÖ³¡
+	LW R7 R0 0x0000
+	LW R7 R1 0x0001
+	LW R7 R2 0x0002
+	LW R7 R3 0x0003
+	LW R7 R4 0x0004
+	
+
+	;MFPC R7
+	;ADDIU R7 0x3
+	;B TESTR
+	;NOP
+	;LI R0 0xBF
+
+	
+	
+	MFPC R7
+	ADDIU R7 0x0004
+	MTIH R5    ;IH¸ßÎ»¸³1	
+	JR R6
+	NOP
+	LW_SP R5 0x0000  ;R5»Ö¸´ÏÖ³¡
+	
+	;ÓÃ»§³ÌÐòÖ´ÐÐÍê±Ï£¬·µ»Økernel£¬±£´æÏÖ³¡
+	NOP
+	NOP
+	ADDSP 0x0001
+	LI R7 0x00BF
+	SLL R7 R7 0x0000
+	ADDIU R7 0x0010
+	
+	SW R7 R0 0x0000
+	SW R7 R1 0x0001
+	SW R7 R2 0x0002
+	SW R7 R3 0x0003
+	SW R7 R4 0x0004
+	SW R7 R5 0x0005
+	
+	;IH¸ßÎ»¸³0
+	MFIH R0
+	LI R1 0x007F
+	SLL R1 R1 0x0000
+	LI R2 0x00FF
+	OR R1 R2	
+	AND R0 R1
+	MTIH R0
+	
+	;¸øÖÕ¶Ë·¢ËÍ½áÊøÓÃ»§³ÌÐòÌáÊ¾
+	LI R1 0x0007
+	MFPC R7
+	ADDIU R7 0x0003	
+	NOP
+	B TESTW	
+	NOP	
+	LI R6 0x00BF 
+	SLL R6 R6 0x0000 ;R6=0xBF00	
+	SW R6 R1 0x0000		
+	B BEGIN
+	NOP	
+		
+	
+	
+
+
+
+
+	
